@@ -1,4 +1,7 @@
 // MongoConfig.java
+
+package com.armrt.config;
+
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
    @Value("${spring.data.mongodb.database}")

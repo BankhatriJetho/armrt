@@ -1,4 +1,8 @@
 // RoleController.java
+
+package com.armrt.controller;
+
+
 @RestController
 @RequestMapping("/api/roles")
 public class RoleController {

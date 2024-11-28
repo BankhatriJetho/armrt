@@ -1,4 +1,7 @@
 // RoleRecommendation.java
+
+package com.armrt.model;
+
 @Document(collection = "role_recommendations")
 public class RoleRecommendation {
     @Id

@@ -1,4 +1,7 @@
 // SavivyntConfig.java
+
+package com.armrt.config;
+
 @Configuration
 public class SavivyntConfig {
    @Value("${saviynt.api.endpoint}")

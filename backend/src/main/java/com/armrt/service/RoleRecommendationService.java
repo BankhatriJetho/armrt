@@ -1,4 +1,7 @@
 // RoleRecommendationService.java
+
+package com.armrt.service;
+
 @Service
 public class RoleRecommendationService {
    private final SavivyntIntegrationService savivyntService;

@@ -1,4 +1,7 @@
 // AccessActivityLog.java
+
+package com.armrt.model;
+
 @Document(collection = "access_logs")
 public class AccessActivityLog {
     @Id

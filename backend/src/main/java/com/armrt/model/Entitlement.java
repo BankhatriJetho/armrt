@@ -1,4 +1,7 @@
 // Entitlement.java
+
+package com.armrt.model;
+
 @Document(collection = "entitlements")
 public class Entitlement {
     @Id

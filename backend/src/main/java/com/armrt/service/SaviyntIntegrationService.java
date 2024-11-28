@@ -1,4 +1,7 @@
 // SavivyntIntegrationService.java
+
+package com.armrt.service;
+
 @Service
 public class SavivyntIntegrationService {
    private final OAuth2RestTemplate oauth2RestTemplate;

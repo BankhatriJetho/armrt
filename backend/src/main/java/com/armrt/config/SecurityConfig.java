@@ -1,4 +1,7 @@
 // SecurityConfig.java
+
+package com.armrt.config;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

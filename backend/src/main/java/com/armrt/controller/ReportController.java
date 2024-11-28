@@ -1,4 +1,7 @@
 // ReportController.java
+
+package com.armrt.controller;
+
 @RestController
 @RequestMapping("/api/reports")
 public class ReportController {

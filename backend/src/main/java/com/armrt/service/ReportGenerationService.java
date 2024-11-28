@@ -1,4 +1,7 @@
 // ReportGenerationService.java
+
+package com.armrt.service;
+
 @Service
 public class ReportGenerationService {
    private final RoleRecommendationRepository repository;
