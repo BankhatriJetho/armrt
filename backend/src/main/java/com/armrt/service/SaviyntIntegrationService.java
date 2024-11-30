@@ -1,35 +1,56 @@
-// SavivyntIntegrationService.java
-
 package com.armrt.service;
 
+import com.armrt.model.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
-public class SavivyntIntegrationService {
-   private final OAuth2RestTemplate oauth2RestTemplate;
-   private final String apiEndpoint;
+public class SaviyntIntegrationService {
+    private final WebClient webClient;
 
-   public SavivyntIntegrationService(OAuth2RestTemplate oauth2RestTemplate, @Value("${saviynt.api.endpoint}") String apiEndpoint) {
-       this.oauth2RestTemplate = oauth2RestTemplate;
-       this.apiEndpoint = apiEndpoint;
-   }
+    @Value("${saviynt.api.endpoint}")
+    private String apiEndpoint;
 
-   public List<UserRoleMapping> fetchUserRoleMappings(String userId) {
-       String url = apiEndpoint + "/user-roles?userId=" + userId;
-       ResponseEntity<List<UserRoleMapping>> response = oauth2RestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<UserRoleMapping>>() {});
-       return response.getBody().stream().filter(UserRoleMapping::isActive).collect(Collectors.toList());
-   }
+    public SaviyntIntegrationService(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
-   public List<Entitlement> retrieveEntitlements(String userId) {
-       String url = apiEndpoint + "/entitlements?userId=" + userId;
-       ResponseEntity<List<Entitlement>> response = oauth2RestTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Entitlement>>() {});
-       return response.getBody().stream().filter(e -> !e.isExpired()).collect(Collectors.toList());
-   }
+    public List<UserRoleMapping> fetchUserRoleMappings(String userId) {
+        String url = apiEndpoint + "/user-roles?userId=" + userId;
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToFlux(UserRoleMapping.class)
+                .filter(UserRoleMapping::isActive)
+                .collectList()
+                .block();
+    }
 
-   public AccessActivityLog fetchAccessLogs(String userId, LocalDate startDate) {
-       String url = apiEndpoint + "/access-logs";
-       MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-       params.add("userId", userId);
-       params.add("startDate", startDate.toString());
-       ResponseEntity<AccessActivityLog> response = oauth2RestTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(params), AccessActivityLog.class);
-       return response.getBody();
-   }
+    public List<Entitlement> retrieveEntitlements(String userId) {
+        String url = apiEndpoint + "/entitlements?userId=" + userId;
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToFlux(Entitlement.class)
+                .filter(e -> !e.isExpired())
+                .collectList()
+                .block();
+    }
+
+    public AccessActivityLog fetchAccessLogs(String userId, LocalDate startDate) {
+        String url = apiEndpoint + "/access-logs";
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(url)
+                        .queryParam("userId", userId)
+                        .queryParam("startDate", startDate.toString())
+                        .build())
+                .retrieve()
+                .bodyToMono(AccessActivityLog.class)
+                .block();
+    }
 }
